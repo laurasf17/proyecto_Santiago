@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My App</title>
+</head>
+<body>
+    <div>
+        <h1>listas de tareas</h1>
+        <div>   
+            <input type="text" id="taskInput" placeholder="titulo de la tarea">
+            <input type="text" id="descriptionInput" placeholder="descripcion de la tarea">
+            <button onclick="GuardarTarea()">Guardar Tarea</button>
+        </div>
+        <div id="Lista de tareas">
+           <!-- Aquí se mostrarán las tareas guardadas -->
+        </div>
+    </div>
+    <script>    
+        //importantes: cuando despleguemos el backend en railway, ponemos la url en la variable apiUrl
+        const BACKEND_URL = 'http://localhost:8000'; // Cambia esto a la
+        async function cargartareas() {
+            try {
+                const respuesta = await fetch(`${BACKEND_URL}/tareas`);
+                const tareas = await respuesta.json();
+                const listaTareasDiv = document.getElementById('Lista de tareas');
+                listaTareasDiv.innerHTML = ''; // Limpiar la lista antes de agregar nuevas tareas
+                tareas.forEach(tarea => {
+                    listaTareasDiv.innerHTML +=`
+                    <div class="tarea">
+                        <strong>${tarea.titulo}</strong>
+                        <p style="margin: 5px 0;">${tarea.descripcion}</p>
+                    </div>`;
+                });
+            } catch (error) {
+                console.error('Error al cargar las tareas:', error);
+            }
+        }
+    </script>
+</body>
+</html>
