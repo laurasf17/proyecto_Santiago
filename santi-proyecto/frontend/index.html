@@ -37,6 +37,38 @@
                 console.error('Error al cargar las tareas:', error);
             }
         }
+
+        async function GuardarTarea() {
+            const titulo = document.getElementById('taskInput').value;
+            const descripcion = document.getElementById('descriptionInput').value;
+
+            if (!titulo || !descripcion) {
+                alert('Por favor llena el título y la descripción');
+                return;
+            }
+
+            try {
+                const params = new URLSearchParams({ titulo, descripcion });
+                const respuesta = await fetch(`${BACKEND_URL}/tareas?${params.toString()}`, {
+                    method: 'POST'
+                });
+
+                if (!respuesta.ok) {
+                    throw new Error(`Error del servidor: ${respuesta.status}`);
+                }
+
+                document.getElementById('taskInput').value = '';
+                document.getElementById('descriptionInput').value = '';
+
+                await cargartareas();
+            } catch (error) {
+                console.error('Error al guardar la tarea:', error);
+                alert('No se pudo guardar la tarea');
+            }
+        }
+
+        // Cargar las tareas apenas se abre la página
+        cargartareas();
     </script>
 </body>
 </html>
